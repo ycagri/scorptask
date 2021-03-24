@@ -47,8 +47,14 @@ dependencies {
     implementation deps.constraintlayout
     implementation deps.recyclerview
     implementation deps.legacy
-    implementation deps.lifecycle
     implementation deps.activity
+
+    implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.java8
+    kapt deps.lifecycle.compiler
+    implementation deps.lifecycle.viewmodel_ktx
+    implementation deps.lifecycle.livedata_ktx
+
 
     implementation deps.dagger.runtime
     implementation deps.dagger.android

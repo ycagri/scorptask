@@ -34,7 +34,6 @@ deps.legacy = "androidx.legacy:legacy-support-v4:$versions.legacy"
 deps.appcompat = "androidx.appcompat:appcompat:$versions.appcompat"
 deps.material = "com.google.android.material:material:$versions.material"
 deps.constraintlayout = "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
-deps.lifecycle = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
 deps.activity = "androidx.activity:activity-ktx:$versions.activity"
 deps.junit = "junit:junit:$versions.junit"
 
@@ -50,5 +49,13 @@ dagger.android_support = "com.google.dagger:dagger-android-support:$versions.dag
 dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
 dagger.android_support_compiler = "com.google.dagger:dagger-android-processor:$versions.dagger"
 deps.dagger = dagger
+
+def lifecycle = [:]
+lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime:$versions.lifecycle"
+lifecycle.java8 = "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
+lifecycle.compiler = "androidx.lifecycle:lifecycle-compiler:$versions.lifecycle"
+lifecycle.viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+lifecycle.livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+deps.lifecycle = lifecycle
 
 ext.deps = deps
