@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -25,6 +26,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        dataBinding = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -43,6 +47,15 @@ dependencies {
     implementation deps.constraintlayout
     implementation deps.recyclerview
     implementation deps.legacy
+    implementation deps.lifecycle
+    implementation deps.activity
+
+    implementation deps.dagger.runtime
+    implementation deps.dagger.android
+    implementation deps.dagger.android_support
+    kapt deps.dagger.compiler
+    kapt deps.dagger.android_support_compiler
+
     testImplementation deps.junit
     androidTestImplementation deps.androidx.junit
     androidTestImplementation deps.androidx.espresso
