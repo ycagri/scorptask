@@ -5,6 +5,8 @@ versions.core = '1.3.2'
 versions.appcompat = '1.2.0'
 versions.material = '1.3.0'
 versions.constraintlayout = '2.0.4'
+versions.recyclerview = '1.1.0'
+versions.legacy = '1.0.0'
 versions.junit = '4.13.2'
 versions.androidx_junit = '1.1.2'
 versions.espresso = '3.3.0'
@@ -24,6 +26,8 @@ deps.kotlin_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin
 
 deps.kotlin = "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
 deps.core = "androidx.core:core-ktx:$versions.core"
+deps.recyclerview = "androidx.recyclerview:recyclerview:$versions.recyclerview"
+deps.legacy = "androidx.legacy:legacy-support-v4:$versions.legacy"
 deps.appcompat = "androidx.appcompat:appcompat:$versions.appcompat"
 deps.material = "com.google.android.material:material:$versions.material"
 deps.constraintlayout = "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"

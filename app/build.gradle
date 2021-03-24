@@ -15,6 +15,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -39,6 +41,8 @@ dependencies {
     implementation deps.appcompat
     implementation deps.material
     implementation deps.constraintlayout
+    implementation deps.recyclerview
+    implementation deps.legacy
     testImplementation deps.junit
     androidTestImplementation deps.androidx.junit
     androidTestImplementation deps.androidx.espresso
