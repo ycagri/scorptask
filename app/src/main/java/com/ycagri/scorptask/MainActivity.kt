@@ -3,7 +3,9 @@ package com.ycagri.scorptask
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ycagri.scorptask.utils.AppExecutors
 import com.ycagri.scorptask.utils.ViewModelFactory
 import dagger.android.AndroidInjection
@@ -25,7 +27,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel: MainActivity by viewModels { viewModelFactory }
+    private val viewModel: MainViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +36,33 @@ class MainActivity : ComponentActivity() {
 
         adapter = MainAdapter(appExecutors = appExecutors)
 
-        val rv_people = findViewById<RecyclerView>(R.id.rv_people)
-        rv_people.setHasFixedSize(true)
-        rv_people.layoutManager = layoutManager
-        rv_people.addItemDecoration(itemDecoration)
-        rv_people.adapter = adapter
+        val rvPeople = findViewById<RecyclerView>(R.id.rv_people)
+        rvPeople.setHasFixedSize(true)
+        rvPeople.layoutManager = layoutManager
+        rvPeople.addItemDecoration(itemDecoration)
+        rvPeople.adapter = adapter
+        rvPeople.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val p =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                if (p >= adapter.itemCount - 5)
+                    viewModel.loadMore()
+            }
+        })
+
+        viewModel.people.observe(this) {
+            adapter.submitList(it)
+        }
+
+        val swRefresh = findViewById<SwipeRefreshLayout>(R.id.sw_refresh)
+        viewModel.refresh.observe(this) {
+            swRefresh.isRefreshing = it
+        }
+
+        swRefresh.setOnRefreshListener {
+            viewModel.refresh.postValue(true)
+        }
+
+        viewModel.loadMore()
     }
 }
