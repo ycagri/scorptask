@@ -2,6 +2,12 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-allopen'
+}
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'com.ycagri.scorptask.testing.OpenClass'
 }
 
 android {
@@ -36,6 +42,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
 }
 
 dependencies {
@@ -63,6 +73,10 @@ dependencies {
     kapt deps.dagger.android_support_compiler
 
     testImplementation deps.junit
+    testImplementation deps.androidx.arch_core
+    testImplementation deps.mockito
+
     androidTestImplementation deps.androidx.junit
     androidTestImplementation deps.androidx.espresso
+    androidTestImplementation deps.mockito
 }
