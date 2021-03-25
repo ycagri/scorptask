@@ -2,52 +2,38 @@ package com.ycagri.scorptask
 
 import androidx.lifecycle.*
 import com.ycagri.scorptask.datasource.*
-import com.ycagri.scorptask.utils.AbsentLiveData
+import com.ycagri.scorptask.livedata.PeopleLiveData
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private val dataSource: DataSource) : ViewModel() {
+class MainViewModel @Inject constructor(val dataSource: DataSource) : ViewModel() {
 
-    private var next: String? = null
-
-    private val userMap = LinkedHashMap<Int, Person>()
-
-    val refresh = MutableLiveData(false)
+    private val _load = MutableLiveData(false)
 
     private val _error = MutableLiveData<String?>()
 
-    val _people = MutableLiveData<List<Person>>()
+    private val _refresh = MutableLiveData(false)
 
-    val people: LiveData<List<Person>> = refresh.switchMap {
-        if (it) {
-            userMap.clear()
-            return@switchMap AbsentLiveData.create()
-        } else {
-            return@switchMap _people
+    val people = PeopleLiveData(dataSource, load = _load, refresh = _refresh, error = _error)
+
+    val emptyText: LiveData<Boolean> = people.map {
+        return@map it.isEmpty()
+    }
+
+    val load: LiveData<Boolean>
+        get() = _load
+
+    val error: LiveData<String?>
+        get() = _error
+
+    fun setLoad(load: Boolean) {
+        if (_load.value != load) {
+            _load.value = load
         }
     }
 
-    val error: LiveData<String> = Transformations.switchMap(_error) {
-        if (it == null) {
-            return@switchMap AbsentLiveData.create()
-        } else {
-            return@switchMap _error
+    fun setRefresh(refresh: Boolean) {
+        if (_refresh.value != refresh) {
+            _refresh.value = refresh
         }
-    }
-
-    fun loadMore() {
-        dataSource.fetch(next, object : FetchCompletionHandler {
-            override fun invoke(response: FetchResponse?, error: FetchError?) {
-                if (response != null) {
-                    for (p in response.people)
-                        userMap[p.id] = p
-
-                    _people.postValue(userMap.values.toList())
-                    refresh.value = false
-                    next = response.next
-                } else {
-                    _error.postValue(error?.errorDescription)
-                }
-            }
-        })
     }
 }
