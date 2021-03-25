@@ -3,8 +3,10 @@ package com.ycagri.scorptask
 import androidx.lifecycle.*
 import com.ycagri.scorptask.datasource.*
 import com.ycagri.scorptask.livedata.PeopleLiveData
+import com.ycagri.scorptask.testing.OpenForTesting
 import javax.inject.Inject
 
+@OpenForTesting
 class MainViewModel @Inject constructor(val dataSource: DataSource) : ViewModel() {
 
     private val _load = MutableLiveData(false)

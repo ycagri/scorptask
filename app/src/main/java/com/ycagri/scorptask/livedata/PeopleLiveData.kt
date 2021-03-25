@@ -11,7 +11,7 @@ class PeopleLiveData(
     val refresh: MutableLiveData<Boolean>,
     val error: MutableLiveData<String?>
 ) :
-    LiveData<List<Person>>() {
+    MutableLiveData<List<Person>>() {
 
     val loadObserver = Observer<Boolean> { t ->
         if (t == true) {
