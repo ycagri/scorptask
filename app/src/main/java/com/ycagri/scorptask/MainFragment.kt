@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import com.ycagri.scorptask.di.Injectable
 import com.ycagri.scorptask.utils.AppExecutors
-import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), Injectable {
 
     lateinit var adapter: MainAdapter
 

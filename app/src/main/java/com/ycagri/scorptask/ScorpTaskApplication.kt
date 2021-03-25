@@ -1,20 +1,27 @@
 package com.ycagri.scorptask
 
+import android.app.Activity
+import android.app.Application
 import com.ycagri.scorptask.datasource.DataSource
 import com.ycagri.scorptask.di.AppComponent
+import com.ycagri.scorptask.di.AppInjector
 import com.ycagri.scorptask.di.DaggerAppComponent
 import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import dagger.android.support.DaggerApplication
+import javax.inject.Inject
 
-class ScorpTaskApplication: DaggerApplication() {
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        val component: AppComponent = DaggerAppComponent.builder()
-            .application(this)
-            .dataSource(DataSource())
-            .build()
+class ScorpTaskApplication: Application(), HasActivityInjector {
 
-        component.inject(this)
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
-        return component
+    override fun onCreate() {
+        super.onCreate()
+
+        AppInjector.init(this)
     }
+
+    override fun activityInjector() = dispatchingAndroidInjector
 }

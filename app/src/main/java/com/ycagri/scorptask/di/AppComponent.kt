@@ -1,6 +1,7 @@
 package com.ycagri.scorptask.di
 
 import android.app.Application
+import com.ycagri.scorptask.ScorpTaskApplication
 import com.ycagri.scorptask.datasource.DataSource
 import dagger.BindsInstance
 import dagger.Component
@@ -13,24 +14,20 @@ import javax.inject.Singleton
 @Component(
     modules = [
         ActivityBindingModule::class,
-        FragmentBindingModule::class,
         ApplicationModule::class,
         AndroidSupportInjectionModule::class,
         ViewModelModule::class
     ]
 )
-interface AppComponent : AndroidInjector<DaggerApplication> {
+interface AppComponent : AndroidInjector<ScorpTaskApplication> {
 
-    override fun inject(instance: DaggerApplication)
+    override fun inject(instance: ScorpTaskApplication)
 
     @Component.Builder
     interface Builder {
 
         @BindsInstance
         fun application(application: Application): Builder
-
-        @BindsInstance
-        fun dataSource(dataSource: DataSource): Builder
 
         fun build(): AppComponent
     }

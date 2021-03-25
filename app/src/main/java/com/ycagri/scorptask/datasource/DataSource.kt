@@ -3,6 +3,7 @@ package com.ycagri.scorptask.datasource
 import android.os.Handler
 import android.os.Looper
 import com.ycagri.scorptask.testing.OpenForTesting
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.math.min
 import kotlin.random.Random
@@ -18,7 +19,7 @@ typealias FetchCompletionHandler = (FetchResponse?, FetchError?) -> Unit
 private data class ProcessResult(val fetchResponse: FetchResponse?, val fetchError: FetchError?, val waitTime: Double)
 
 @OpenForTesting
-class DataSource {
+class DataSource @Inject constructor(){
     companion object {
         private var people: List<Person> = listOf()
     }
