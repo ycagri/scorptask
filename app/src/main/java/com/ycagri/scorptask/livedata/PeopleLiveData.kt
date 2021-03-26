@@ -1,6 +1,5 @@
 package com.ycagri.scorptask.livedata
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.ycagri.scorptask.datasource.*
@@ -12,6 +11,10 @@ class PeopleLiveData(
     val error: MutableLiveData<String?>
 ) :
     MutableLiveData<List<Person>>() {
+
+    companion object {
+        const val DONE = "done"
+    }
 
     val loadObserver = Observer<Boolean> { t ->
         if (t == true) {
@@ -38,7 +41,7 @@ class PeopleLiveData(
                     userMap[p.id] = p
 
                 value = userMap.values.toList()
-                next = response.next
+                next = response.next ?: DONE
             } else {
                 error.value = e?.errorDescription
             }
@@ -46,6 +49,10 @@ class PeopleLiveData(
             refresh.value = false
             load.value = false
         }
+    }
+
+    fun isDone(): Boolean {
+        return next?.equals(DONE) == true
     }
 
     override fun onActive() {

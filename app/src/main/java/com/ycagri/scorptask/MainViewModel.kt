@@ -28,7 +28,9 @@ class MainViewModel @Inject constructor(val dataSource: DataSource) : ViewModel(
         get() = _error
 
     fun setLoad(load: Boolean) {
-        if (_load.value != load) {
+        if (people.isDone()) {
+            _load.value = false
+        } else if (_load.value != load) {
             _load.value = load
         }
     }

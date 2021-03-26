@@ -66,6 +66,7 @@ class MainFragment : Fragment(), Injectable {
         }
 
         viewModel.error.observe(viewLifecycleOwner) {
+            viewModel.setLoad(false)
             Snackbar.make(view, it ?: "Unknown Error", Snackbar.LENGTH_LONG).show()
         }
 

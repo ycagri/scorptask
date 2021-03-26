@@ -12,14 +12,17 @@ import com.ycagri.scorptask.datasource.DataSource
 import com.ycagri.scorptask.livedata.PeopleLiveData
 import com.ycagri.scorptask.util.CountingAppExecutorsRule
 import com.ycagri.scorptask.util.RecyclerViewMatcher
+import com.ycagri.scorptask.util.SwipeRefreshLayoutMatchers.isRefreshing
 import com.ycagri.scorptask.util.TestUtil
 import com.ycagri.scorptask.util.ViewModelUtil
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 
 @RunWith(AndroidJUnit4::class)
 class MainFragmentTest {
@@ -52,8 +55,12 @@ class MainFragmentTest {
         `when`(viewModel.load).thenReturn(load)
         `when`(viewModel.error).thenReturn(error)
         `when`(viewModel.emptyText).thenReturn(emptyText)
+        `when`(viewModel.setLoad(true)).then {
+            if(people.isDone())
+                load.postValue(false) else load.postValue(true)
+        }
+        `when`(viewModel.setLoad(false)).then { load.postValue(false) }
 
-        doNothing().`when`(viewModel).setLoad(anyBoolean())
         launchFragmentInContainer(Bundle(), R.style.Theme_AppCompat) {
             MainFragment().apply {
                 appExecutors = countingAppExecutors.appExecutors
@@ -83,11 +90,41 @@ class MainFragmentTest {
     }
 
     @Test
-    fun onError(){
+    fun onError() {
         error.postValue("Test Error")
 
-        onView(allOf(withId(com.google.android.material.R.id.snackbar_text), withText("Test Error")))
+        onView(
+            allOf(
+                withId(com.google.android.material.R.id.snackbar_text),
+                withText("Test Error")
+            )
+        )
             .check(ViewAssertions.matches(isDisplayed()))
+    }
+
+    @Test
+    fun swipeIndicatorTest() {
+        onView(withId(R.id.sw_refresh)).check(ViewAssertions.matches(isRefreshing()))
+
+        viewModel.setLoad(false)
+        onView(withId(R.id.sw_refresh)).check(ViewAssertions.matches(not(isRefreshing())))
+    }
+
+    @Test
+    fun loadWithErrorTest() {
+        onView(withId(R.id.sw_refresh)).check(ViewAssertions.matches(isRefreshing()))
+
+        error.postValue("Test Error")
+        onView(withId(R.id.sw_refresh)).check(ViewAssertions.matches(not(isRefreshing())))
+    }
+
+    @Test
+    fun loadWithFewTest() {
+        onView(withId(R.id.sw_refresh)).check(ViewAssertions.matches(isRefreshing()))
+
+        people.next = PeopleLiveData.DONE
+        people.postValue(TestUtil.createPeopleList())
+        onView(withId(R.id.sw_refresh)).check(ViewAssertions.matches(not(isRefreshing())))
     }
 
     private fun listMatcher() = RecyclerViewMatcher(R.id.rv_people)
