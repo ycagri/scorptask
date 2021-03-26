@@ -1,0 +1,97 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+}
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'com.ycagri.scorptask.testing.OpenClass'
+}
+
+android {
+    compileSdkVersion build_versions.compile_sdk
+    buildToolsVersion build_versions.build_tools
+
+    defaultConfig {
+        applicationId "com.ycagri.scorptask"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "com.ycagri.scorptask.util.ScorpAppTestRunner"
+
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        dataBinding = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
+}
+
+dependencies {
+
+    implementation deps.kotlin
+    implementation deps.core
+    implementation deps.appcompat
+    implementation deps.material
+    implementation deps.constraintlayout
+    implementation deps.recyclerview
+    implementation deps.legacy
+    implementation deps.activity
+    implementation deps.fragment
+
+    implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.java8
+    kapt deps.lifecycle.compiler
+    implementation deps.lifecycle.viewmodel_ktx
+    implementation deps.lifecycle.livedata_ktx
+
+
+    implementation deps.dagger.runtime
+    implementation deps.dagger.android
+    implementation deps.dagger.android_support
+    kapt deps.dagger.compiler
+    kapt deps.dagger.android_support_compiler
+
+    testImplementation deps.junit
+    testImplementation deps.androidx.arch_core
+    testImplementation deps.mockito
+
+    androidTestImplementation deps.appcompat
+    androidTestImplementation deps.recyclerview
+    androidTestImplementation deps.material
+    androidTestImplementation deps.androidx.junit
+    androidTestImplementation deps.androidx.espresso
+    androidTestImplementation deps.androidx.espresso_contrib
+    androidTestImplementation deps.mockito
+    androidTestImplementation deps.mockito_android
+    androidTestImplementation deps.androidx.arch_core
+    debugImplementation deps.fragment_testing
+}
+
+// we need all open to run tests which we enable only for debug builds.
+project.tasks.whenTaskAdded {
+    if (it.name == "testReleaseUnitTest") {
+        it.enabled = false
+    }
+}
