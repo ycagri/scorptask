@@ -20,6 +20,6 @@ jobs:
     - name: Clean with Gradle
       run: ./gradlew clean
     - name: Run Unit Tests with Gradle
-      run: ./gradlew test
+      run: ./gradlew testDebug
     - name: Run Instrumented Tests with Gradle
       run: ./gradlew deviceAndroidTest

@@ -88,3 +88,10 @@ dependencies {
     androidTestImplementation deps.androidx.arch_core
     debugImplementation deps.fragment_testing
 }
+
+// we need all open to run tests which we enable only for debug builds.
+project.tasks.whenTaskAdded {
+    if (it.name == "testReleaseUnitTest") {
+        it.enabled = false
+    }
+}

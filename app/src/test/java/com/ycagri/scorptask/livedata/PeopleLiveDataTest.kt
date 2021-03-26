@@ -70,7 +70,7 @@ class PeopleLiveDataTest {
 
         load.value = true
         verify(dataSource).fetch("next", liveData.callback)
-        Assert.assertEquals(null, liveData.next)
+        Assert.assertEquals(PeopleLiveData.DONE, liveData.next)
         Assert.assertEquals(2, liveData.userMap.size)
 
         verify(refresh, times(2)).value = false
